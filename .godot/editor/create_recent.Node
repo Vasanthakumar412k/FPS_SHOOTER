@@ -1,0 +1,14 @@
+MeshInstance3D
+OmniLight3D
+DirectionalLight3D
+CollisionShape3D
+StaticBody3D
+GPUParticles3D
+Node
+RigidBody3D
+ShapeCast3D
+Camera3D
+WorldEnvironment
+LightmapGI
+Window
+AnimationPlayer

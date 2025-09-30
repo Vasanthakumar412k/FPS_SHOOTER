@@ -1,0 +1,15 @@
+res://trevor.tscn
+res://theme.tres
+res://StateMachine.gd
+res://Idle_state.gd
+res://shooting_state.gd
+res://world.gdshader
+res://wall.gdshader
+res://sky_shader.gdshader
+res://water.gdshader
+res://world.tscn
+res://Jump_state.gd
+res://Sprint_state.gd
+res://Walking_state.gd
+res://CharacterBody.gd
+res://global.gd

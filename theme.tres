@@ -1,0 +1,15 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://7edijya3r4g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4wipj"]
+bg_color = Color(0.6, 0.6, 0.6, 0.211765)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[resource]
+MarginContainer/constants/margin_bottom = 10
+MarginContainer/constants/margin_left = 10
+MarginContainer/constants/margin_right = 10
+MarginContainer/constants/margin_top = 10
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_4wipj")

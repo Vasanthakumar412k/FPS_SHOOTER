@@ -1,0 +1,153 @@
+[gd_scene load_steps=26 format=3 uid="uid://b24hg0pn5kstb"]
+
+[ext_resource type="Script" uid="uid://4a6jdbcrjv7o" path="res://world.gd" id="1_b08te"]
+[ext_resource type="PackedScene" uid="uid://b6p56ftt1v032" path="res://trevor.tscn" id="1_h0cms"]
+[ext_resource type="Shader" uid="uid://b105o5hc5h8q7" path="res://world.gdshader" id="2_tlwt5"]
+[ext_resource type="Shader" uid="uid://2bsfbg7lofey" path="res://wall.gdshader" id="3_aqk2v"]
+[ext_resource type="Shader" uid="uid://c1g52han3hxst" path="res://sky_shader.gdshader" id="3_pkg7o"]
+[ext_resource type="Shader" uid="uid://bmgv8ewgaqrs1" path="res://water.gdshader" id="5_036b0"]
+[ext_resource type="ArrayMesh" uid="uid://cnp8nnhstmrf8" path="res://small_house.obj" id="6_dwbse"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ew741"]
+rough = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nh7mb"]
+custom_solver_bias = 1.0
+size = Vector3(10000, 1, 10000)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aqk2v"]
+shader = ExtResource("2_tlwt5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tlwt5"]
+next_pass = SubResource("ShaderMaterial_aqk2v")
+albedo_color = Color(0.2, 0.6, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kjhb5"]
+material = SubResource("StandardMaterial3D_tlwt5")
+size = Vector3(10000, 1, 10000)
+
+[sub_resource type="Animation" id="Animation_trisy"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_qgyic"]
+resource_name = "lift working"
+length = 20.0
+loop_mode = 1
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2jfpn"]
+_data = {
+&"RESET": SubResource("Animation_trisy"),
+&"lift working": SubResource("Animation_qgyic")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gbfbk"]
+shader = ExtResource("3_pkg7o")
+shader_parameter/top_sky = Color(0.619365, 0.744863, 1, 1)
+shader_parameter/bottom_sky = Color(0.651673, 0.767033, 1, 1)
+shader_parameter/sun_color = Color(0.724643, 0.724643, 0.724643, 1)
+shader_parameter/sun_ray_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/sun_disk_size = 0.995
+shader_parameter/sun_ray_size = 0.9
+shader_parameter/sun_scatter = Color(0.2, 0, 0, 1)
+shader_parameter/cloud_density = 0.5
+shader_parameter/cloud_speed = 0.01
+shader_parameter/cloud_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Sky" id="Sky_aqk2v"]
+sky_material = SubResource("ShaderMaterial_gbfbk")
+
+[sub_resource type="Environment" id="Environment_036b0"]
+background_mode = 2
+sky = SubResource("Sky_aqk2v")
+sky_custom_fov = 69.2
+glow_enabled = true
+volumetric_fog_albedo = Color(0.495936, 0.495936, 0, 1)
+volumetric_fog_emission = Color(1, 1, 0.717647, 1)
+volumetric_fog_sky_affect = 0.73
+
+[sub_resource type="Environment" id="Environment_dwbse"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tlwt5"]
+size = Vector3(1, 5, 5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_aqk2v"]
+size = Vector3(1, 5, 5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pkg7o"]
+render_priority = 0
+shader = ExtResource("3_aqk2v")
+shader_parameter/time = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_gbfbk"]
+material = SubResource("ShaderMaterial_pkg7o")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dwbse"]
+render_priority = 0
+shader = ExtResource("5_036b0")
+
+[sub_resource type="BoxMesh" id="BoxMesh_036b0"]
+material = SubResource("ShaderMaterial_dwbse")
+size = Vector3(3, 3, 3)
+
+[node name="World" type="Node3D" node_paths=PackedStringArray("ANIMATION", "light")]
+script = ExtResource("1_b08te")
+ANIMATION = NodePath("AnimationPlayer")
+light = NodePath("DirectionalLight3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_ew741")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_nh7mb")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/CollisionShape3D"]
+lod_bias = 0.001
+mesh = SubResource("BoxMesh_kjhb5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_2jfpn")
+}
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 80, 0)
+light_color = Color(1, 0.956863, 0.878431, 1)
+light_energy = 3.0
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+light_specular = 0.0
+shadow_enabled = true
+shadow_bias = 0.5
+shadow_normal_bias = 1.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_036b0")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.660552, 0, -0.75078, 0, 1, 0, 0.75078, 0, -0.660552, -2.83268, 1.35994, 0)
+environment = SubResource("Environment_dwbse")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 3, 6)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2"]
+shape = SubResource("BoxShape3D_tlwt5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2/CollisionShape3D"]
+mesh = SubResource("BoxMesh_aqk2v")
+
+[node name="Node3D" parent="." instance=ExtResource("1_h0cms")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15589, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.17847, 4.89305, -2.93415)
+mesh = SubResource("BoxMesh_gbfbk")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.534502, 2.04925, -5.25561)
+mesh = SubResource("BoxMesh_036b0")
+skeleton = NodePath("../StaticBody3D")
+
+[node name="SmallHouse" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5522, 0.655373, -8.51077)
+mesh = ExtResource("6_dwbse")
